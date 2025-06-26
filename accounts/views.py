@@ -80,8 +80,8 @@ class CalendarStatsView(APIView):
 
 class AppointmentBookingView(APIView):
     """API endpoint for booking appointments"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    authentication_classes = []
+    permission_classes = [AllowAny]
     
     def post(self, request):
         serializer = AppointmentBookingSerializer(data=request.data)
