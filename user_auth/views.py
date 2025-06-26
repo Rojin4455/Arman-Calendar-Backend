@@ -6,6 +6,7 @@ from rest_framework.views import APIView
 
 class AdminTokenObtainPairView(TokenObtainPairView):
     permission_classes = [AllowAny]
+    print('here')
     # permission_classes = [IsAdminUser]
 
 class AdminTokenRefreshView(TokenRefreshView):
