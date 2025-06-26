@@ -3,14 +3,20 @@ import time
 from typing import List, Dict, Any, Optional
 from django.utils.dateparse import parse_datetime
 from django.db import transaction
-from accounts.models import Contact
 from ghl_auth.models import GHLAuthCredentials
 from django.utils.timezone import make_aware
-from datetime import datetime
 from zoneinfo import ZoneInfo
 import math
-import requests
-from accounts.models import GHLUser
+from datetime import datetime, timedelta
+from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY
+from django.conf import settings
+from .models import GHLAppointment, GHLUser, Contact, RecurringAppointmentGroup
+import logging
+from django.utils import timezone
+import pytz
+
+from dateutil.relativedelta import relativedelta
+
 
 
 
@@ -262,3 +268,406 @@ def pull_users(locationId):
                 # "calendar_id": user_calendar_map.get(user_id)  # Map calendar if exists
             }
         )
+
+
+
+
+
+
+logger = logging.getLogger('accounts.services')
+
+
+class GHLAppointmentService:
+    BASE_URL = "https://services.leadconnectorhq.com"
+    
+    @staticmethod
+    def get_location_timezone(location_id):
+        """Get timezone for a location from GHL credentials"""
+        try:
+            auth_creds = GHLAuthCredentials.objects.get(
+                location_id=location_id,
+                is_approved=True
+            )
+            tz_name = auth_creds.timezone or 'UTC'
+            return pytz.timezone(tz_name)
+        except (GHLAuthCredentials.DoesNotExist, pytz.exceptions.UnknownTimeZoneError):
+            return pytz.UTC
+    
+    @staticmethod
+    def convert_to_location_timezone(dt, location_id):
+        """Convert datetime to location timezone"""
+        if not dt:
+            return dt
+            
+        location_tz = GHLAppointmentService.get_location_timezone(location_id)
+        
+        if timezone.is_naive(dt):
+            # If naive, assume it's in location timezone
+            return location_tz.localize(dt)
+        else:
+            # If aware, convert to location timezone
+            return dt.astimezone(location_tz)
+    
+    @staticmethod
+    def get_auth_credentials(location_id):
+        """Get authentication credentials for a location"""
+        try:
+            return GHLAuthCredentials.objects.get(
+                location_id=location_id,
+                is_approved=True
+            )
+        except GHLAuthCredentials.DoesNotExist:
+            raise ValueError(f"No valid credentials found for location {location_id}")
+    
+    # @staticmethod
+    # def generate_rrule(interval, count, start_date):
+    #     """Generate RRULE string for recurring appointments"""
+    #     freq_map = {
+    #         'daily': DAILY,
+    #         'weekly': WEEKLY,
+    #         'monthly': MONTHLY
+    #     }
+        
+    #     if interval not in freq_map:
+    #         raise ValueError(f"Invalid interval: {interval}")
+        
+    #     # Ensure start_date is timezone-aware
+    #     if timezone.is_naive(start_date):
+    #         start_date = timezone.make_aware(start_date)
+        
+    #     rule = rrule(
+    #         freq=freq_map[interval],
+    #         count=count,
+    #         dtstart=start_date
+    #     )
+        
+    #     return f"RRULE:FREQ={interval.upper()};INTERVAL=1;COUNT={count}"
+    
+    @staticmethod
+    def create_ghl_appointment(appointment_data, access_token):
+        """Create appointment in GHL via API"""
+        url = f"{GHLAppointmentService.BASE_URL}/calendars/events/appointments"
+        
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json',
+            'Version': '2021-04-15'
+        }
+        
+        try:
+            response = requests.post(url, json=appointment_data, headers=headers)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"GHL API Error: {e}")
+            raise ValueError(f"Failed to create appointment in GHL: {str(e)}")
+    
+    @staticmethod
+    def update_ghl_appointment(appointment_id, appointment_data, access_token):
+        """Update appointment in GHL via API"""
+        url = f"{GHLAppointmentService.BASE_URL}/calendars/events/appointments/{appointment_id}"
+        
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {access_token}',
+            'Content-Type': 'application/json',
+            'Version': '2021-04-15'
+        }
+        
+        try:
+            response = requests.put(url, json=appointment_data, headers=headers)
+            response.raise_for_status()
+            return response.json()
+        except requests.exceptions.RequestException as e:
+            logger.error(f"GHL API Error: {e}")
+            raise ValueError(f"Failed to update appointment in GHL: {str(e)}")
+    
+    @staticmethod
+    def delete_ghl_appointment(appointment_id, access_token):
+        """Delete appointment in GHL via API"""
+        url = f"{GHLAppointmentService.BASE_URL}/calendars/events/appointments/{appointment_id}"
+        
+        headers = {
+            'Accept': 'application/json',
+            'Authorization': f'Bearer {access_token}',
+            'Version': '2021-04-15'
+        }
+        
+        try:
+            response = requests.delete(url, headers=headers)
+            response.raise_for_status()
+            return True
+        except requests.exceptions.RequestException as e:
+            logger.error(f"GHL API Error: {e}")
+            raise ValueError(f"Failed to delete appointment in GHL: {str(e)}")
+        
+
+    @classmethod
+    def calculate_occurrence_dates(cls, start_datetime, end_datetime, interval, count):
+        """
+        Calculate all occurrence dates for a recurring appointment
+        
+        Args:
+            start_datetime: Initial start datetime
+            end_datetime: Initial end datetime
+            interval: 'daily', 'weekly', 'monthly', 'yearly'
+            count: Number of occurrences
+            
+        Returns:
+            List of tuples (start_datetime, end_datetime) for each occurrence
+        """
+        occurrences = []
+        duration = end_datetime - start_datetime
+        
+        for i in range(count):
+            if interval == 'daily':
+                occurrence_start = start_datetime + timedelta(days=i)
+            elif interval == 'weekly':
+                occurrence_start = start_datetime + timedelta(weeks=i)
+            elif interval == 'monthly':
+                occurrence_start = start_datetime + relativedelta(months=i)
+            elif interval == 'yearly':
+                occurrence_start = start_datetime + relativedelta(years=i)
+            else:
+                raise ValueError(f"Unsupported interval: {interval}")
+            
+            occurrence_end = occurrence_start + duration
+            occurrences.append((occurrence_start, occurrence_end))
+        
+        return occurrences
+    
+    @classmethod
+    def book_appointments(cls, validated_data):
+        from datetime import timezone
+
+        
+
+        """Book single or recurring appointments"""
+        created_appointments = []
+        errors = []
+        
+        try:
+            # Get auth credentials and timezone
+            auth_creds = cls.get_auth_credentials(validated_data['locationId'])
+            location_tz = cls.get_location_timezone(validated_data['locationId'])
+            
+            # Get contact details
+            contact = Contact.objects.get(contact_id=validated_data['contactId'])
+            
+            # Convert datetimes to location timezone and then to UTC for GHL API
+            start_dt_local = cls.convert_to_location_timezone(
+                validated_data['startDateTime'], 
+                validated_data['locationId']
+            )
+            end_dt_local = cls.convert_to_location_timezone(
+                validated_data['endDateTime'], 
+                validated_data['locationId']
+            )
+            
+            # Convert to UTC for GHL API (GHL expects UTC)
+            start_dt_utc = start_dt_local.astimezone(pytz.UTC)
+            end_dt_utc = end_dt_local.astimezone(pytz.UTC)
+            
+            recurring_group = None
+            if validated_data['type'] == 'recurring':
+                try:
+                    recurring_group = RecurringAppointmentGroup.objects.create(
+                        title=validated_data.get('title', 'Recurring Appointment'),
+                        description=validated_data.get('description', ''),
+                        interval=validated_data['interval'],
+                        total_count=validated_data.get('count', 12),
+                        original_start_time=start_dt_utc,
+                        original_end_time=end_dt_utc,
+                        contact_id=validated_data['contactId'],
+                        location_id=validated_data['locationId']
+                    )
+                    logger.info(f"Created recurring group: {recurring_group.group_id}")
+                except Exception as e:
+                    logger.error(f"Failed to create recurring group: {str(e)}")
+                    return [], [f"Failed to create recurring group: {str(e)}"]
+            
+            # Calculate occurrences
+            if validated_data['type'] == 'recurring':
+                occurrences = cls.calculate_occurrence_dates(
+                    start_dt_utc,
+                    end_dt_utc,
+                    validated_data['interval'],
+                    validated_data.get('count', 12)
+                )
+            else:
+                occurrences = [(start_dt_utc, end_dt_utc)]
+            
+            # Create appointments for each user and occurrence
+            for user_id in validated_data['userIds']:
+                try:
+                    # Get user details
+                    user = GHLUser.objects.get(user_id=user_id)
+                    
+                    if not user.calendar_id:
+                        errors.append(f"User {user_id} has no calendar assigned")
+                        continue
+                    
+                    # Create appointments for each occurrence
+                    for occurrence_number, (occurrence_start, occurrence_end) in enumerate(occurrences, 1):
+                        try:
+                            # Convert to UTC for GHL API
+                            occurrence_start_utc = occurrence_start.astimezone(timezone.utc)
+                            occurrence_end_utc = occurrence_end.astimezone(timezone.utc)
+                            
+                            # Prepare appointment data for GHL
+                            appointment_data = {
+                                "title": validated_data.get('title', 'Appointment'),
+                                "description": validated_data.get('description', ''),
+                                "meetingLocationType": "custom",
+                                "meetingLocationId": "default",
+                                "overrideLocationConfig": True,
+                                "appointmentStatus": "new",
+                                "assignedUserId": user_id,
+                                "address": "Office",
+                                "ignoreDateRange": False,
+                                "toNotify": True,
+                                "ignoreFreeSlotValidation": True,
+                                "calendarId": user.calendar_id,
+                                "locationId": validated_data['locationId'],
+                                "contactId": validated_data['contactId'],
+                                "startTime": occurrence_start_utc.isoformat(),
+                                "endTime": occurrence_end_utc.isoformat()
+                            }
+                            
+                            # Create appointment in GHL
+                            ghl_response = cls.create_ghl_appointment(
+                                appointment_data,
+                                auth_creds.access_token
+                            )
+                            
+                            # Save to local database
+                            local_appointment = GHLAppointment.objects.create(
+                                ghl_appointment_id=ghl_response.get('id'),
+                                recurring_group=recurring_group,
+                                occurrence_number=occurrence_number if recurring_group else None,
+                                contact_id=validated_data['contactId'],
+                                assigned_to=user_id,
+                                calendar_id=user.calendar_id,
+                                location_id=validated_data['locationId'],
+                                title=validated_data.get('title', 'Appointment'),
+                                description=validated_data.get('description', ''),
+                                start_time=occurrence_start,  # Store in local timezone
+                                end_time=occurrence_end       # Store in local timezone
+                            )
+                            
+                            created_appointments.append(local_appointment)
+                            logger.info(f"Created appointment {local_appointment.id} for user {user_id}, occurrence {occurrence_number}")
+                            
+                        except Exception as e:
+                            error_msg = f"Error creating occurrence {occurrence_number} for user {user_id}: {str(e)}"
+                            logger.error(error_msg)
+                            errors.append(error_msg)
+                            continue
+                    
+                except GHLUser.DoesNotExist:
+                    error_msg = f"User {user_id} not found"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
+                except Exception as e:
+                    error_msg = f"Error processing user {user_id}: {str(e)}"
+                    logger.error(error_msg)
+                    errors.append(error_msg)
+            
+                return created_appointments, errors
+            
+        except Exception as e:
+            logger.error(f"Failed to book appointments: {str(e)}")
+            raise ValueError(f"Failed to book appointments: {str(e)}")
+    
+    @classmethod
+    def update_appointment(cls, appointment_id, validated_data):
+        """Update an existing appointment"""
+        try:
+            # Get local appointment
+            appointment = GHLAppointment.objects.get(id=appointment_id)
+            
+            # Get auth credentials and timezone
+            auth_creds = cls.get_auth_credentials(appointment.location_id)
+            location_tz = cls.get_location_timezone(appointment.location_id)
+            
+            # Prepare update data
+            update_data = {}
+            if 'title' in validated_data:
+                update_data['title'] = validated_data['title']
+                appointment.title = validated_data['title']
+            
+            if 'description' in validated_data:
+                update_data['description'] = validated_data['description']
+                appointment.description = validated_data['description']
+            
+            if 'startDateTime' in validated_data:
+                # Convert to location timezone then to UTC for GHL
+                start_dt_local = cls.convert_to_location_timezone(
+                    validated_data['startDateTime'], 
+                    appointment.location_id
+                )
+                start_dt_utc = start_dt_local.astimezone(pytz.UTC)
+                update_data['startTime'] = start_dt_utc.isoformat()
+                appointment.start_time = start_dt_local
+            
+            if 'endDateTime' in validated_data:
+                # Convert to location timezone then to UTC for GHL
+                end_dt_local = cls.convert_to_location_timezone(
+                    validated_data['endDateTime'], 
+                    appointment.location_id
+                )
+                end_dt_utc = end_dt_local.astimezone(pytz.UTC)
+                update_data['endTime'] = end_dt_utc.isoformat()
+                appointment.end_time = end_dt_local
+            
+            # Update in GHL
+            if appointment.ghl_appointment_id and update_data:
+                cls.update_ghl_appointment(
+                    appointment.ghl_appointment_id,
+                    update_data,
+                    auth_creds.access_token
+                )
+            
+            # Save local changes
+            appointment.save()
+            
+            return appointment
+            
+        except GHLAppointment.DoesNotExist:
+            raise ValueError("Appointment not found")
+        except Exception as e:
+            logger.error(f"Failed to update appointment: {str(e)}")
+            raise ValueError(f"Failed to update appointment: {str(e)}")
+    
+    @classmethod
+    def delete_appointment(cls, appointment_id):
+        """Delete an appointment"""
+        try:
+            # Get local appointment
+            appointment = GHLAppointment.objects.get(id=appointment_id)
+            
+            # Get auth credentials
+            auth_creds = cls.get_auth_credentials(appointment.location_id)
+            
+            # Delete from GHL
+            if appointment.ghl_appointment_id:
+                cls.delete_ghl_appointment(
+                    appointment.ghl_appointment_id,
+                    auth_creds.access_token
+                )
+            
+            # Delete from local database
+            appointment.delete()
+            
+            return True
+            
+        except GHLAppointment.DoesNotExist:
+            raise ValueError("Appointment not found")
+        except Exception as e:
+            raise ValueError(f"Failed to delete appointment: {str(e)}")
+
+
+
+
+

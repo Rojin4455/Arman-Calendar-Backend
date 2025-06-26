@@ -87,6 +87,26 @@ REST_FRAMEWORK = {
 }
 
 
+
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',  # changed from 'ERROR'
+            'class': 'logging.FileHandler',
+            'filename': 'ghl_appointments.log',
+        },
+    },
+    'loggers': {
+        'accounts.services': {
+            'handlers': ['file'],
+            'level': 'DEBUG',  # changed from 'ERROR'
+            'propagate': True,
+        },
+    },
+}
+
 SIMPLE_JWT = {
     'ACCESS_TOKEN_LIFETIME': timedelta(minutes=60),
     'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
