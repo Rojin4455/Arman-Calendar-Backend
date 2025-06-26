@@ -17,7 +17,7 @@ import pytz
 
 from dateutil.relativedelta import relativedelta
 
-
+import json
 
 
 
@@ -359,9 +359,15 @@ class GHLAppointmentService:
             response = requests.post(url, json=appointment_data, headers=headers)
             response.raise_for_status()
             return response.json()
-        except requests.exceptions.RequestException as e:
-            logger.error(f"GHL API Error: {e}")
-            raise ValueError(f"Failed to create appointment in GHL: {str(e)}")
+
+        except requests.exceptions.HTTPError as e:
+            try:
+                error_detail = response.json()
+            except:
+                error_detail = response.text
+            logger.error(f"GHL API Error: {e} | Detail: {error_detail}")
+            logger.error(f"Payload: {json.dumps(appointment_data, indent=2)}")
+            raise ValueError(f"GHL error: {error_detail}")
     
     @staticmethod
     def update_ghl_appointment(appointment_id, appointment_data, access_token):
@@ -497,11 +503,18 @@ class GHLAppointmentService:
                 )
             else:
                 occurrences = [(start_dt_utc, end_dt_utc)]
+
+            print("validated_data['userIds']:    ,", validated_data['userIds'])
+            
             
             # Create appointments for each user and occurrence
             for user_id in validated_data['userIds']:
+                # break
                 try:
+
+                    print("user:id : ", user_id)
                     # Get user details
+
                     user = GHLUser.objects.get(user_id=user_id)
                     
                     if not user.calendar_id:
@@ -519,20 +532,14 @@ class GHLAppointmentService:
                             appointment_data = {
                                 "title": validated_data.get('title', 'Appointment'),
                                 "description": validated_data.get('description', ''),
-                                "meetingLocationType": "custom",
-                                "meetingLocationId": "default",
-                                "overrideLocationConfig": True,
-                                "appointmentStatus": "new",
+                                "appointmentStatus": "confirmed",
                                 "assignedUserId": user_id,
-                                "address": "Office",
-                                "ignoreDateRange": False,
-                                "toNotify": True,
-                                "ignoreFreeSlotValidation": True,
                                 "calendarId": user.calendar_id,
                                 "locationId": validated_data['locationId'],
                                 "contactId": validated_data['contactId'],
                                 "startTime": occurrence_start_utc.isoformat(),
-                                "endTime": occurrence_end_utc.isoformat()
+                                "endTime": occurrence_end_utc.isoformat(),
+                                "ignoreFreeSlotValidation": True
                             }
                             
                             # Create appointment in GHL
@@ -574,7 +581,7 @@ class GHLAppointmentService:
                     logger.error(error_msg)
                     errors.append(error_msg)
             
-                return created_appointments, errors
+            return created_appointments, errors
             
         except Exception as e:
             logger.error(f"Failed to book appointments: {str(e)}")

@@ -1,11 +1,86 @@
-🔥 Test error log from accounts.services
-🔥 Test error log from accounts.services
-Created recurring group: 5cd59d57-2486-4719-9e62-c3d9280417e1
-Created appointment 31 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
-Created appointment 32 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
-Created appointment 33 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
-Created appointment 34 for user bJkBvMdEmHcDyoXawvTA, occurrence 4
-Created appointment 35 for user bJkBvMdEmHcDyoXawvTA, occurrence 5
-Created appointment 36 for user bJkBvMdEmHcDyoXawvTA, occurrence 6
-Created appointment 37 for user bJkBvMdEmHcDyoXawvTA, occurrence 7
-Created appointment 38 for user bJkBvMdEmHcDyoXawvTA, occurrence 8
+Created recurring group: b465808a-8f4e-4649-bc48-d04232724182
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '14620931-2923-46a7-ab51-6c0f01e2e413'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "bJkBvMdEmHcDyoXawvTA",
+  "calendarId": "K097J0lbWWcUuEpWrxOZ",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-06-30T14:00:00+00:00",
+  "endTime": "2025-06-30T15:00:00+00:00"
+}
+Error creating occurrence 1 for user bJkBvMdEmHcDyoXawvTA: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '14620931-2923-46a7-ab51-6c0f01e2e413'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'ff749efe-fa01-4742-a47b-b012431353ff'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "bJkBvMdEmHcDyoXawvTA",
+  "calendarId": "K097J0lbWWcUuEpWrxOZ",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-07T14:00:00+00:00",
+  "endTime": "2025-07-07T15:00:00+00:00"
+}
+Error creating occurrence 2 for user bJkBvMdEmHcDyoXawvTA: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'ff749efe-fa01-4742-a47b-b012431353ff'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '2e1e2a14-7e64-4dcd-9e69-ac698bccd3fa'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "bJkBvMdEmHcDyoXawvTA",
+  "calendarId": "K097J0lbWWcUuEpWrxOZ",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-14T14:00:00+00:00",
+  "endTime": "2025-07-14T15:00:00+00:00"
+}
+Error creating occurrence 3 for user bJkBvMdEmHcDyoXawvTA: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '2e1e2a14-7e64-4dcd-9e69-ac698bccd3fa'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'abdaa309-39c3-4c2a-9f1b-158a489aa9b0'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU",
+  "calendarId": "vn2XrSkjAAwfKLU0F8FO",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-06-30T14:00:00+00:00",
+  "endTime": "2025-06-30T15:00:00+00:00"
+}
+Error creating occurrence 1 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'abdaa309-39c3-4c2a-9f1b-158a489aa9b0'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'f28d6ebb-fcae-447f-8664-8876dd419cd6'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU",
+  "calendarId": "vn2XrSkjAAwfKLU0F8FO",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-07T14:00:00+00:00",
+  "endTime": "2025-07-07T15:00:00+00:00"
+}
+Error creating occurrence 2 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'f28d6ebb-fcae-447f-8664-8876dd419cd6'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '63e22f84-18e6-44e7-a067-20a5b6ab4d9c'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU",
+  "calendarId": "vn2XrSkjAAwfKLU0F8FO",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-14T14:00:00+00:00",
+  "endTime": "2025-07-14T15:00:00+00:00"
+}
+Error creating occurrence 3 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'The slot you have selected is no longer available.', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '63e22f84-18e6-44e7-a067-20a5b6ab4d9c'}
+Created recurring group: 9f5b5430-b9f1-420a-b1b2-0335d980ebe2
+Created appointment 72 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 73 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 74 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+Created appointment 75 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+Created appointment 76 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
+Created appointment 77 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
