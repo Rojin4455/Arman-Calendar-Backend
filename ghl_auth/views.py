@@ -10,6 +10,11 @@ from ghl_auth.services import get_location_name
 from urllib.parse import urlencode
 from accounts.tasks import async_fetch_all_contacts
 
+from django.views import View
+from django.utils.decorators import method_decorator
+from accounts.models import GHLUser
+from ghl_auth.services import create_or_update_contact, delete_contact
+
 
 # Create your views here.
 
@@ -104,4 +109,66 @@ def tokens(request):
     except requests.exceptions.JSONDecodeError:
         frontend_url = f"{FRONTEND_URL}/admin/error-onboard"
         return redirect(frontend_url)
+    
+
+
+
+
+
+
+
+@method_decorator(csrf_exempt, name='dispatch')
+class GhlWebhookView(View):
+    def post(self, request):
+        try:
+            webhook_data = json.loads(request.body)
+            event_type = webhook_data.get("type")
+            token = GHLAuthCredentials.objects.get(location_id = webhook_data.get("locationId"))
+
+
+
+            if event_type == "UserCreate":
+                self.handle_user_create(webhook_data, token)
+
+            if event_type in ["ContactCreate", "ContactUpdate"]:
+                create_or_update_contact(webhook_data)
+            elif event_type == "ContactDelete":
+                delete_contact(webhook_data)
+
+            return JsonResponse({"message": "Handled"}, status=200)
+        
+        except Exception as e:
+            return JsonResponse({"error": str(e)}, status=500)
+
+    
+
+    
+
+    def handle_user_create(self, data, token):
+
+        headers = {
+        'Accept': 'application/json',
+        'Authorization': f'Bearer {token.access_token}',
+        'Version': '2021-07-28'  # or '2021-04-15' for calendars endpoint
+        }
+
+        user_response = requests.get(
+        f"https://services.leadconnectorhq.com/users/{data["id"]}",
+        headers=headers
+        )
+
+        user = user_response.json()
+        user_id = user["id"]
+        GHLUser.objects.update_or_create(
+            user_id=user_id,
+            defaults={
+                "first_name": user.get("firstName", ""),
+                "last_name": user.get("lastName", ""),
+                "name": user.get("name", ""),
+                "email": user.get("email", ""),
+                "phone": user.get("phone", ""),
+                "location_id": token.location_id,
+            }
+        )
+
     
