@@ -5,10 +5,13 @@ from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import GHLUser
-from .serializers import GHLUserCalendarUpdateSerializer
+from .serializers import GHLUserCalendarUpdateSerializer,GHLUserSerializer
+from rest_framework.permissions import IsAdminUser
+
 
 
 class UpdateUserCalendarView(APIView):
+    permission_classes = [IsAdminUser]
     def post(self, request, user_id):
         user = get_object_or_404(GHLUser, user_id=user_id)
         serializer = GHLUserCalendarUpdateSerializer(user, data=request.data, partial=True)
@@ -28,15 +31,19 @@ class UpdateUserCalendarView(APIView):
 
 
 class CalendarStatsView(APIView):
+    permission_classes = [IsAdminUser]
+
     def get(self, request, location_id=None):
         try:
             users = GHLUser.objects.all()
+            
             if location_id:
                 users = users.filter(location_id=location_id)
 
             total = users.count()
             with_cal = users.exclude(calendar_id__isnull=True).exclude(calendar_id='').count()
             without_cal = total - with_cal
+            serializer = GHLUserSerializer(users, many=True)
 
             return Response({
                 'success': True,
@@ -44,7 +51,8 @@ class CalendarStatsView(APIView):
                     'total_users': total,
                     'users_with_calendar': with_cal,
                     'users_without_calendar': without_cal,
-                    'calendar_coverage_percentage': round((with_cal / total * 100) if total > 0 else 0, 2)
+                    'calendar_coverage_percentage': round((with_cal / total * 100) if total > 0 else 0, 2),
+                    "all_users":serializer.data
                 }
             })
 

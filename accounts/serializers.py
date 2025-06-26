@@ -5,3 +5,9 @@ class GHLUserCalendarUpdateSerializer(serializers.ModelSerializer):
     class Meta:
         model = GHLUser
         fields = ['calendar_id']
+
+
+class GHLUserSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = GHLUser
+        fields = "__all__"
