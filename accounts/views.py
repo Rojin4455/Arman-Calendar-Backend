@@ -84,7 +84,7 @@ class CalendarStatsView(APIView):
 
 class AppointmentBookingView(APIView):
     """API endpoint for booking appointments"""
-    authentication_classes = []
+    # authentication_classes = []
     permission_classes = [AllowAny]
     
     def post(self, request):
@@ -124,8 +124,8 @@ class AppointmentBookingView(APIView):
 
 class AppointmentUpdateView(APIView):
     """API endpoint for updating appointments"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     
     def put(self, request, appointment_id):
         # Pass appointment_id to serializer context for timezone handling
@@ -172,8 +172,8 @@ class AppointmentUpdateView(APIView):
 
 class AppointmentDeleteView(APIView):
     """API endpoint for deleting appointments"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     
     def delete(self, request, appointment_id):
         try:
@@ -198,8 +198,8 @@ class AppointmentDeleteView(APIView):
 
 class AppointmentListView(APIView):
     """API endpoint for listing appointments"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     
     def get(self, request):
         appointments = GHLAppointment.objects.all().order_by('-created_at')
@@ -226,8 +226,8 @@ class AppointmentListView(APIView):
 
 class AppointmentDetailView(APIView):
     """API endpoint for getting appointment details"""
-    authentication_classes = [JWTAuthentication]
-    permission_classes = [IsAuthenticated]
+    # authentication_classes = [JWTAuthentication]
+    permission_classes = [AllowAny]
     
     def get(self, request, appointment_id):
         try:
@@ -302,7 +302,7 @@ class RecurringAppointmentGroupListView(generics.ListAPIView):
     """
     queryset = RecurringAppointmentGroup.objects.filter(is_active=True)
     serializer_class = RecurringAppointmentGroupSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = StandardResultsSetPagination
     
     def get_queryset(self):
@@ -325,7 +325,7 @@ class RecurringGroupAppointmentsView(generics.ListAPIView):
     Retrieve all appointments under a specific recurring group
     """
     serializer_class = GHLAppointmentSerializer
-    permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
     pagination_class = StandardResultsSetPagination
     
     def get_queryset(self):
@@ -415,7 +415,7 @@ def delete_recurring_group(request, group_id):
 
 
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([AllowAny])
 def delete_single_appointment(request, appointment_id):
     """
     Delete a single appointment from GHL and local database
