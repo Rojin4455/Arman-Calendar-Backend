@@ -73,11 +73,6 @@ class CalendarStatsView(APIView):
         
 
 
-
-
-
-
-
 class AppointmentBookingView(APIView):
     """API endpoint for booking appointments"""
     authentication_classes = []
