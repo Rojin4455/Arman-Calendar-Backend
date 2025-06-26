@@ -6,12 +6,12 @@ from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import GHLUser
 from .serializers import GHLUserCalendarUpdateSerializer,GHLUserSerializer
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 
 
 
 class UpdateUserCalendarView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
     def post(self, request, user_id):
         user = get_object_or_404(GHLUser, user_id=user_id)
         serializer = GHLUserCalendarUpdateSerializer(user, data=request.data, partial=True)
@@ -31,7 +31,7 @@ class UpdateUserCalendarView(APIView):
 
 
 class CalendarStatsView(APIView):
-    permission_classes = [IsAdminUser]
+    permission_classes = [AllowAny]
 
     def get(self, request, location_id=None):
         try:
