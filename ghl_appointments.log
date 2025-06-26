@@ -84,3 +84,281 @@ Created appointment 74 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
 Created appointment 75 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
 Created appointment 76 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
 Created appointment 77 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
+Created recurring group: 150e53bf-5499-4131-b23e-07c8e8e87e4d
+Created appointment 90 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 91 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 92 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'dff79dc5-2476-4b87-ba0e-daa6ba791b46'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "26hxXTld0cm1gijlCxaB",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-06-29T14:00:00+00:00",
+  "endTime": "2025-06-29T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true,
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU"
+}
+Error creating occurrence 1 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': 'dff79dc5-2476-4b87-ba0e-daa6ba791b46'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '11580784-9e79-480e-b2f4-f53e8a338aa6'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "26hxXTld0cm1gijlCxaB",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-06T14:00:00+00:00",
+  "endTime": "2025-07-06T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true,
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU"
+}
+Error creating occurrence 2 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '11580784-9e79-480e-b2f4-f53e8a338aa6'}
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '86fd3c13-11af-46cc-93e0-6b95ed9d1155'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "26hxXTld0cm1gijlCxaB",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-13T14:00:00+00:00",
+  "endTime": "2025-07-13T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true,
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU"
+}
+Error creating occurrence 3 for user qS7XxuUlhlrcyUUtmdGU: GHL error: {'message': 'Calendar is deleted', 'error': 'Bad Request', 'statusCode': 400, 'traceId': '86fd3c13-11af-46cc-93e0-6b95ed9d1155'}
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '59124411-cbbb-4b61-83dd-69e9eb3e63ef'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-06-29T14:00:00+00:00",
+  "endTime": "2025-06-29T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 1 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '59124411-cbbb-4b61-83dd-69e9eb3e63ef'}
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '45ad4f48-e4c8-4fe7-9a42-1f0da8e66219'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-06T14:00:00+00:00",
+  "endTime": "2025-07-06T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 2 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '45ad4f48-e4c8-4fe7-9a42-1f0da8e66219'}
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'b491ca76-8406-4c49-b4c5-63d5c9a6b4ec'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-13T14:00:00+00:00",
+  "endTime": "2025-07-13T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 3 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'b491ca76-8406-4c49-b4c5-63d5c9a6b4ec'}
+Created recurring group: da8ca8a8-3a0f-44f5-8312-1fad5cb27855
+Created appointment 93 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 94 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 95 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+Created appointment 96 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+Created appointment 97 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
+Created appointment 98 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'a31ccf71-0134-47f6-8c91-d5999317cd17'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-06-29T14:00:00+00:00",
+  "endTime": "2025-06-29T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 1 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'a31ccf71-0134-47f6-8c91-d5999317cd17'}
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '80826389-88ed-407b-ad56-aaa596779e7e'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-06T14:00:00+00:00",
+  "endTime": "2025-07-06T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 2 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '80826389-88ed-407b-ad56-aaa596779e7e'}
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'ef078a3c-22c3-495d-838f-bd84690b625d'}
+Payload: {
+  "title": "Client Consultation",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "wF51PIbLM1nKPjraUEKv",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-13T14:00:00+00:00",
+  "endTime": "2025-07-13T15:00:00+00:00",
+  "ignoreFreeSlotValidation": true
+}
+Error creating occurrence 3 for user  : GHL error: {'message': 'A team member needs to be selected. assignedUserId or userId is missing', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'ef078a3c-22c3-495d-838f-bd84690b625d'}
+Created recurring group: b398565b-9c69-4061-a288-ec2071672b5c
+Created appointment 107 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 108 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 109 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+Created appointment 110 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+Created appointment 111 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
+Created appointment 112 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
+Created appointment 113 for user  , occurrence 1
+Created appointment 114 for user  , occurrence 2
+Created appointment 115 for user  , occurrence 3
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/D6R9mU4ZL35UauIn6II2
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/joZL5HrX7eNAYXjA0YtI
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/yZv1DlJzvKGAu6r4p6IB
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/CALpuw1LeNWrjifS58L1
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/FmR7h0joWNqg7x0CvLRX
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/ZCqDrmkssEca5Tl7pB2x
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/JnKJJnfXiV1mpR8wftgF
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/uMA8TGjFoke3fE2HeiYn
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/GqWEHsyPNpabnLMyBoGt
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/poNkaT7wDbWkfKWfzSgu
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/j9CXEXWyMffneHiQWYjk
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/Y1sNPXZwp5dz5LuFF4nR
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/ojsgliyamQ3QoyNN9wW8
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/0UZ7E1oKGHS6G8WFJ2PT
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/P44irYTFpgojHdUYPyuZ
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/Y3iaWcvfR3OjJiAyaT4N
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/Pd8i1c3yJxWP1kgd7Y9x
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/jLciFU3u4Oel9T0yRu5q
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/QrsGhkP1zoiRG2zSvug7
+GHL API Error: 401 Client Error: Unauthorized for url: https://services.leadconnectorhq.com/calendars/events/appointments/G1l4ZjqrHB8lTW7fffZM
+Created recurring group: e21517cf-27de-4d27-8cea-420427c1db46
+Created appointment 138 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 139 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 140 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+Created appointment 141 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+Created appointment 142 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
+Created appointment 143 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
+Created appointment 144 for user  , occurrence 1
+Created appointment 145 for user  , occurrence 2
+Created appointment 146 for user  , occurrence 3
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/am1Yj7xqAtPOrFSiukS1
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/mSoPM3fllIbnzjlamNjy
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/KtsOi34CGXHVED6amb4a
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/85qnkghOQ65ZPd2WseAe
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/i9hKOi6K2HFxPVhA6kjL
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/TCTsRHUDbQ59ERyWaTd9
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/ahjggot0737dbt2B4GhM
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/6FyVowcyDszw4w0Kptco
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/ypWhBABv50DdWl4zNAgM
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/NXuwh9DIB8ZHtq0RBqzL
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/FbvEr76k2wPzpO4phN72
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/vorRQI8s36mEMIkD6dyY
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/JpQSrtO0kmRgRRZVlyNj
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/0RH5Nd9wVa0RMjqPlEEc
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/T0rkJ63CFutNuWLMxWO2
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/QVe0rProl6eJekALaf5g
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/3wZEnbZXTgogsfBgpaJT
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/2JvZKRrqRMKmVVnkz0rT
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/1zbPsYEbTAnnLPgUyrxy
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/i2GcNdvFyIJabd1wZO3W
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/ixTo46T29p2mWT96xiO4
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/jMDon9twfWqMK9hzzfEF
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/4NVRIGWQ1UQ8oJ57eqCJ
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/KPqpZjEqTjOzvHulQaSC
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/MS7Zd2Wcs4xsjIErOHMX
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/gKwlVDO9v2fSnRnQjGV6
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/vLBqqGaVRjhu0JNyROiA
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/sUSRXu2YFQmDwvJZFD8l
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/Hv6UGLovOs5T59eOkjJp
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/evErhOPztVSCiQs5e9nx
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/7vLMydZClYzK58TTparr
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/5RP4ZLVjtaasgA5EG01z
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/bqwpu2KOnPuyc3OBtWv3
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/xkkwSzeR7zhxLi2wBjJF
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/DUXIQTBueIuN0FYyWIFt
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/xkkwSzeR7zhxLi2wBjJF
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/R0GVU72BhWa3rTBpdlkQ
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/DUXIQTBueIuN0FYyWIFt
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/LK4CcekU4WYHLPRKOgUB
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/FPRxNAc5nsPtnEWJklCh
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/R0GVU72BhWa3rTBpdlkQ
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/PWCzJLnpRvp8dfgqF6h3
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/LK4CcekU4WYHLPRKOgUB
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/L1hyftFjMMffyQkdXtfm
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/FPRxNAc5nsPtnEWJklCh
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/2TBTLpzP9mlXCYhFUHKn
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/PWCzJLnpRvp8dfgqF6h3
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/L1hyftFjMMffyQkdXtfm
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/2TBTLpzP9mlXCYhFUHKn
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/KwI0I6FyAi5blo2q8ims
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/OV3MdEjQT3vh4LwJb5vA
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/c9C3ujFrybnNJdthRMI7
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/KwI0I6FyAi5blo2q8ims
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/Z5kYSHu2bVwLsReoe2qk
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/OV3MdEjQT3vh4LwJb5vA
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/LLO7vb4KhZAOMAas9ruP
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/c9C3ujFrybnNJdthRMI7
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/h7Vjj5pNXD5FwR3V6Xr6
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/Z5kYSHu2bVwLsReoe2qk
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/yLAzIgxxQbcF41JX2lnM
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/kzTJTjwJgBF13zkbYguI
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/LLO7vb4KhZAOMAas9ruP
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/h7Vjj5pNXD5FwR3V6Xr6
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/yLAzIgxxQbcF41JX2lnM
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/kzTJTjwJgBF13zkbYguI
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/pLb8dHFWuWmyzvXbSyVh
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/9ojblvz3JhANfLyq6CPt
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/cRULt28xCToOZTDnbbSa
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/YeaaY2oxISzaUchjTBa1
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/pLb8dHFWuWmyzvXbSyVh
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/F7LcBno1pN7KcuAG5Jvz
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/9ojblvz3JhANfLyq6CPt
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/H2SJz9jTUMZoYVs465q4
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/6zY474QEtdQeGzSyoXlD
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/cRULt28xCToOZTDnbbSa
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/wlNWy4KAoQNnCnljSh3C
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/YeaaY2oxISzaUchjTBa1
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/F7LcBno1pN7KcuAG5Jvz
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/H2SJz9jTUMZoYVs465q4
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/6zY474QEtdQeGzSyoXlD
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/oW9cJvAI9saVegzo5jpP
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/wlNWy4KAoQNnCnljSh3C
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/Zob7JqEXFZIzYIagMRYC
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/iI2aG0a1QI2dxLiqiSp1
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/WlVVldCfuweGtoXE0UQb
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/nQ3m47nLjn37Q18w9rDv
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/oW9cJvAI9saVegzo5jpP
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/cA5bQsJIDfcU5lAr2YHp
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/Zob7JqEXFZIzYIagMRYC
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/WDiiohOCrPkQlttdcXUO
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/iI2aG0a1QI2dxLiqiSp1
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/bp9ruQa7IuXUiSauZ4WA
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/WlVVldCfuweGtoXE0UQb
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/nQ3m47nLjn37Q18w9rDv
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/cA5bQsJIDfcU5lAr2YHp
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/WDiiohOCrPkQlttdcXUO
+GHL API Error: 400 Client Error: Bad Request for url: https://services.leadconnectorhq.com/calendars/events/bp9ruQa7IuXUiSauZ4WA
+Created recurring group: 886e3081-1a68-4acb-85f1-f7b7a90f70f1
+Created appointment 147 for user bJkBvMdEmHcDyoXawvTA, occurrence 1
+Created appointment 148 for user bJkBvMdEmHcDyoXawvTA, occurrence 2
+Created appointment 149 for user bJkBvMdEmHcDyoXawvTA, occurrence 3
+Created appointment 150 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+Created appointment 151 for user qS7XxuUlhlrcyUUtmdGU, occurrence 2
+Created appointment 152 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
+Created appointment 153 for user  , occurrence 1
+Created appointment 154 for user  , occurrence 2
+Created appointment 155 for user  , occurrence 3

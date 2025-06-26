@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from datetime import datetime, timedelta
 from dateutil.rrule import rrule, DAILY, WEEKLY, MONTHLY
-from .models import GHLAppointment, Contact, GHLUser
+from .models import GHLAppointment, Contact, GHLUser, RecurringAppointmentGroup
 from ghl_auth.models import GHLAuthCredentials
 from django.utils import timezone
 import pytz
@@ -201,3 +201,38 @@ class AppointmentResponseSerializer(serializers.ModelSerializer):
     class Meta:
         model = GHLAppointment
         fields = '__all__'
+
+
+
+class RecurringAppointmentGroupSerializer(serializers.ModelSerializer):
+    appointments_count = serializers.SerializerMethodField()
+    
+    class Meta:
+        model = RecurringAppointmentGroup
+        fields = [
+            'id', 'group_id', 'title', 'description', 'interval', 
+            'total_count', 'original_start_time', 'original_end_time',
+            'contact_id', 'location_id', 'created_at', 'updated_at',
+            'is_active', 'appointments_count'
+        ]
+        read_only_fields = ['id', 'group_id', 'created_at', 'updated_at']
+    
+    def get_appointments_count(self, obj):
+        return obj.appointments.filter(is_active=True).count()
+
+
+class GHLAppointmentSerializer(serializers.ModelSerializer):
+    recurring_group_title = serializers.CharField(
+        source='recurring_group.title', 
+        read_only=True
+    )
+    
+    class Meta:
+        model = GHLAppointment
+        fields = [
+            'id', 'ghl_appointment_id', 'contact_id', 'recurring_group',
+            'occurrence_number', 'assigned_to', 'calendar_id', 'location_id',
+            'title', 'description', 'start_time', 'end_time', 'status',
+            'created_at', 'updated_at', 'is_active', 'recurring_group_title'
+        ]
+        read_only_fields = ['id', 'created_at', 'updated_at']

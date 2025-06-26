@@ -28,7 +28,7 @@ SECRET_KEY = config("SECRET_KEY")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['3.148.233.108', '127.0.0.1', '127.0.0.1:8000', 'appointment.theservicepilot.com']
+ALLOWED_HOSTS = ['3.148.233.108', '127.0.0.1', '127.0.0.1:8000', 'appointment.theservicepilot.com', "localhost"]
 
 
 # Application definition
@@ -209,6 +209,10 @@ from celery.schedules import crontab
 CELERY_BEAT_SCHEDULE = {
     'make-api-call-every-minute': {
         'task': 'accounts.tasks.make_api_call',
+        'schedule': 60.0,
+    },
+    'make-api-call-every-minute1': {
+        'task': 'accounts.tasks.deletion_task',
         'schedule': 60.0,
     },
 }

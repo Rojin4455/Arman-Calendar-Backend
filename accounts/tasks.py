@@ -42,3 +42,14 @@ def make_api_call():
 def async_fetch_all_contacts(location_id, access_token):
     fetch_all_contacts(location_id, access_token)
 
+
+
+from accounts.models import RecurringAppointmentGroup
+@shared_task
+def deletion_task():
+
+    r = RecurringAppointmentGroup.objects.all()
+
+    for j in r:
+        res = requests.delete(f"http://localhost:8000/api/accounts/recurring-groups/{j.group_id}/delete/")
+        print(res.status_code, res.text)

@@ -2,7 +2,6 @@ from django.shortcuts import render
 
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import status
 from django.shortcuts import get_object_or_404
 from .models import GHLUser,Contact
 from .serializers import GHLUserCalendarUpdateSerializer,GHLUserSerializer,ContactSerializer
@@ -13,14 +12,24 @@ from rest_framework_simplejwt.authentication import JWTAuthentication
 from .serializers import (
     AppointmentBookingSerializer,
     AppointmentUpdateSerializer,
-    AppointmentResponseSerializer
+    AppointmentResponseSerializer,
+    RecurringAppointmentGroupSerializer,
+    GHLAppointmentSerializer
 )
 from .services import GHLAppointmentService
-from .models import GHLAppointment
 
-from rest_framework import generics
 from django.db.models import Q
 from .pagination import StandardResultsSetPagination
+
+from rest_framework import generics, status
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.pagination import PageNumberPagination
+from django.db import transaction
+from .models import RecurringAppointmentGroup, GHLAppointment
+import logging
+import requests
+
+logger = logging.getLogger(__name__)
 
 class UpdateUserCalendarView(APIView):
     permission_classes = [AllowAny]
@@ -273,3 +282,176 @@ class GHLUserSearchView(generics.ListAPIView):
             Q(email__icontains=search) |
             Q(phone__icontains=search)
         )
+    
+
+
+
+
+
+
+
+class StandardResultsSetPagination(PageNumberPagination):
+    page_size = 20
+    page_size_query_param = 'page_size'
+    max_page_size = 100
+
+
+class RecurringAppointmentGroupListView(generics.ListAPIView):
+    """
+    List all recurring appointment groups with pagination
+    """
+    queryset = RecurringAppointmentGroup.objects.filter(is_active=True)
+    serializer_class = RecurringAppointmentGroupSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        queryset = super().get_queryset()
+        
+        # Optional filtering
+        interval = self.request.query_params.get('interval')
+        if interval:
+            queryset = queryset.filter(interval=interval)
+            
+        location_id = self.request.query_params.get('location_id')
+        if location_id:
+            queryset = queryset.filter(location_id=location_id)
+            
+        return queryset
+
+
+class RecurringGroupAppointmentsView(generics.ListAPIView):
+    """
+    Retrieve all appointments under a specific recurring group
+    """
+    serializer_class = GHLAppointmentSerializer
+    permission_classes = [IsAuthenticated]
+    pagination_class = StandardResultsSetPagination
+    
+    def get_queryset(self):
+        group_id = self.kwargs['group_id']
+        recurring_group = get_object_or_404(
+            RecurringAppointmentGroup, 
+            group_id=group_id,
+            is_active=True
+        )
+        return GHLAppointment.objects.filter(
+            recurring_group=recurring_group,
+            is_active=True
+        ).order_by('occurrence_number', 'start_time')
+
+
+@api_view(['DELETE'])
+@permission_classes([AllowAny])
+def delete_recurring_group(request, group_id):
+    """
+    Delete a recurring group and all its appointments (bulk delete)
+    """
+    try:
+        with transaction.atomic():
+            # Get the recurring group
+            recurring_group = get_object_or_404(
+                RecurringAppointmentGroup,
+                group_id=group_id,
+                is_active=True
+            )
+            
+            # Get all related appointments
+            appointments = GHLAppointment.objects.filter(
+                recurring_group=recurring_group,
+                is_active=True
+            )
+            
+            deleted_count = 0
+            failed_deletions = []
+            
+            # Delete each appointment from GHL and local DB
+            for appointment in appointments:
+                try:
+                    if appointment.ghl_appointment_id:
+                        # Delete from GHL using your existing service
+                        GHLAppointmentService.delete_appointment(appointment.id)
+                        deleted_count += 1
+                    else:
+                        # If no GHL ID, just delete locally
+                        appointment.delete()
+                        deleted_count += 1
+                        
+                except Exception as e:
+                    logger.error(f"Failed to delete appointment {appointment.id}: {str(e)}")
+                    failed_deletions.append({
+                        'appointment_id': appointment.id,
+                        'error': str(e)
+                    })
+            
+            # Mark the recurring group as inactive
+            recurring_group.is_active = False
+            recurring_group.save()
+            
+            response_data = {
+                'message': 'Recurring group deleted successfully',
+                'group_id': str(group_id),
+                'deleted_appointments_count': deleted_count,
+                'failed_deletions': failed_deletions
+            }
+            
+            if failed_deletions:
+                response_data['warning'] = 'Some appointments could not be deleted from GHL'
+                return Response(response_data, status=status.HTTP_207_MULTI_STATUS)
+            
+            return Response(response_data, status=status.HTTP_200_OK)
+            
+    except RecurringAppointmentGroup.DoesNotExist:
+        return Response(
+            {'error': 'Recurring group not found'},
+            status=status.HTTP_404_NOT_FOUND
+        )
+    except Exception as e:
+        logger.error(f"Error deleting recurring group {group_id}: {str(e)}")
+        return Response(
+            {'error': f'Failed to delete recurring group: {str(e)}'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+
+@api_view(['DELETE'])
+@permission_classes([IsAuthenticated])
+def delete_single_appointment(request, appointment_id):
+    """
+    Delete a single appointment from GHL and local database
+    """
+    try:
+        # Use your existing service method
+        result = GHLAppointmentService.delete_appointment(appointment_id)
+        print("result: ", result)
+        
+        return Response(
+            {
+                'message': 'Appointment deleted successfully',
+                'appointment_id': appointment_id
+            },
+            status=status.HTTP_200_OK
+        )
+        
+    except ValueError as e:
+        # Handle specific errors from your service
+        error_msg = str(e)
+        if "not found" in error_msg.lower():
+            return Response(
+                {'error': error_msg},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        else:
+            return Response(
+                {'error': error_msg},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+            
+    except Exception as e:
+        logger.error(f"Unexpected error deleting appointment {appointment_id}: {str(e)}")
+        return Response(
+            {'error': 'Internal server error'},
+            status=status.HTTP_500_INTERNAL_SERVER_ERROR
+        )
+
+

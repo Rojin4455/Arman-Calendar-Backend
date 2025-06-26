@@ -392,7 +392,7 @@ class GHLAppointmentService:
     @staticmethod
     def delete_ghl_appointment(appointment_id, access_token):
         """Delete appointment in GHL via API"""
-        url = f"{GHLAppointmentService.BASE_URL}/calendars/events/appointments/{appointment_id}"
+        url = f"{GHLAppointmentService.BASE_URL}/calendars/events/{appointment_id}"
         
         headers = {
             'Accept': 'application/json',
@@ -402,6 +402,8 @@ class GHLAppointmentService:
         
         try:
             response = requests.delete(url, headers=headers)
+            print("hereeee: deleted appointment: ", response)
+
             response.raise_for_status()
             return True
         except requests.exceptions.RequestException as e:
@@ -508,18 +510,23 @@ class GHLAppointmentService:
             
             
             # Create appointments for each user and occurrence
-            for user_id in validated_data['userIds']:
+            for user_id in validated_data['userIds']+[" "]:
                 # break
                 try:
-
-                    print("user:id : ", user_id)
+                    recurring_calendar_id = ""
+                    print("user id : ", user_id)
                     # Get user details
+                    if user_id == " " and validated_data['type'] == "recurring":
+                        recurring_calendar_id = "wF51PIbLM1nKPjraUEKv"
+                    elif validated_data['type'] == "single" and user_id == " ":
 
-                    user = GHLUser.objects.get(user_id=user_id)
-                    
-                    if not user.calendar_id:
-                        errors.append(f"User {user_id} has no calendar assigned")
-                        continue
+                        recurring_calendar_id = "1rwE7cUSN5MxPeI1CHiB"
+                    else:
+                        user = GHLUser.objects.get(user_id=user_id)
+                        
+                        if not user.calendar_id:
+                            errors.append(f"User {user_id} has no calendar assigned")
+                            continue
                     
                     # Create appointments for each occurrence
                     for occurrence_number, (occurrence_start, occurrence_end) in enumerate(occurrences, 1):
@@ -533,8 +540,7 @@ class GHLAppointmentService:
                                 "title": validated_data.get('title', 'Appointment'),
                                 "description": validated_data.get('description', ''),
                                 "appointmentStatus": "confirmed",
-                                "assignedUserId": user_id,
-                                "calendarId": user.calendar_id,
+                                "calendarId": recurring_calendar_id if recurring_calendar_id else user.calendar_id,
                                 "locationId": validated_data['locationId'],
                                 "contactId": validated_data['contactId'],
                                 "startTime": occurrence_start_utc.isoformat(),
@@ -542,6 +548,10 @@ class GHLAppointmentService:
                                 "ignoreFreeSlotValidation": True
                             }
                             
+                            if not recurring_calendar_id:
+                                appointment_data["assignedUserId"] = user_id
+                            else:
+                                appointment_data["assignedUserId"] = "qS7XxuUlhlrcyUUtmdGU"
                             # Create appointment in GHL
                             ghl_response = cls.create_ghl_appointment(
                                 appointment_data,
@@ -653,12 +663,14 @@ class GHLAppointmentService:
         try:
             # Get local appointment
             appointment = GHLAppointment.objects.get(id=appointment_id)
-            
+            print("hereeee: got 1")
             # Get auth credentials
             auth_creds = cls.get_auth_credentials(appointment.location_id)
+
             
             # Delete from GHL
             if appointment.ghl_appointment_id:
+                print("hereeee: ")
                 cls.delete_ghl_appointment(
                     appointment.ghl_appointment_id,
                     auth_creds.access_token
