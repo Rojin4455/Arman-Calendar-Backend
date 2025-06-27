@@ -11,7 +11,8 @@ from accounts.views import (UpdateUserCalendarView,
                     RecurringAppointmentGroupListView,
                     RecurringGroupAppointmentsView,
                     delete_recurring_group,
-                    delete_single_appointment
+                    delete_single_appointment,
+                    NonRecurringAppointmentsView
                     )
 
 urlpatterns = [
@@ -47,4 +48,6 @@ urlpatterns = [
         delete_single_appointment,
         name='delete-single-appointment'
     ),
+    path('appointments/non-recurring/', NonRecurringAppointmentsView.as_view(), name='non_recurring_appointments'),
+
 ]

@@ -82,6 +82,18 @@ class AppointmentBookingSerializer(serializers.Serializer):
         max_value=365,
         default=12
     )
+    every = serializers.IntegerField(
+        required=False,
+        min_value=1,
+        max_value=365,
+        default=1
+    )
+    # frequency = serializers.IntegerField(
+    #     required=False,
+    #     min_value=1,
+    #     max_value=365,
+    #     default=1
+    # )
     
     def validate(self, attrs):
         # Get timezone from GHL credentials for proper datetime comparison
@@ -236,3 +248,24 @@ class GHLAppointmentSerializer(serializers.ModelSerializer):
             'created_at', 'updated_at', 'is_active', 'recurring_group_title'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
+
+
+
+class AppointmentWithUserSerializer(serializers.ModelSerializer):
+    assigned_user_name = serializers.SerializerMethodField()
+
+    class Meta:
+        model = GHLAppointment
+        fields = [
+            'id', 'ghl_appointment_id', 'contact_id', 'assigned_to', 'calendar_id',
+            'location_id', 'title', 'description', 'start_time', 'end_time',
+            'status', 'created_at', 'updated_at', 'is_active',
+            'assigned_user_name'
+        ]
+
+    def get_assigned_user_name(self, obj):
+        try:
+            user = GHLUser.objects.get(user_id=obj.assigned_to)
+            return user.name
+        except GHLUser.DoesNotExist:
+            return "date for service"

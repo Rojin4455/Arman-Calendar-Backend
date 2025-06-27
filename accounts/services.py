@@ -412,7 +412,7 @@ class GHLAppointmentService:
         
 
     @classmethod
-    def calculate_occurrence_dates(cls, start_datetime, end_datetime, interval, count):
+    def calculate_occurrence_dates(cls, start_datetime, end_datetime, interval, every, count):
         """
         Calculate all occurrence dates for a recurring appointment
         
@@ -420,29 +420,33 @@ class GHLAppointmentService:
             start_datetime: Initial start datetime
             end_datetime: Initial end datetime
             interval: 'daily', 'weekly', 'monthly', 'yearly'
+            every: How often the appointment should repeat (e.g., every 2 weeks)
             count: Number of occurrences
-            
+
         Returns:
             List of tuples (start_datetime, end_datetime) for each occurrence
         """
+        if every < 1:
+            raise ValueError("Parameter 'every' must be a positive integer greater than 0.")
+
         occurrences = []
         duration = end_datetime - start_datetime
-        
+
         for i in range(count):
             if interval == 'daily':
-                occurrence_start = start_datetime + timedelta(days=i)
+                occurrence_start = start_datetime + timedelta(days=i * every)
             elif interval == 'weekly':
-                occurrence_start = start_datetime + timedelta(weeks=i)
+                occurrence_start = start_datetime + timedelta(weeks=i * every)
             elif interval == 'monthly':
-                occurrence_start = start_datetime + relativedelta(months=i)
+                occurrence_start = start_datetime + relativedelta(months=i * every)
             elif interval == 'yearly':
-                occurrence_start = start_datetime + relativedelta(years=i)
+                occurrence_start = start_datetime + relativedelta(years=i * every)
             else:
                 raise ValueError(f"Unsupported interval: {interval}")
-            
+
             occurrence_end = occurrence_start + duration
             occurrences.append((occurrence_start, occurrence_end))
-        
+
         return occurrences
     
     @classmethod
@@ -501,6 +505,7 @@ class GHLAppointmentService:
                     start_dt_utc,
                     end_dt_utc,
                     validated_data['interval'],
+                    validated_data.get('every', 1),
                     validated_data.get('count', 12)
                 )
             else:

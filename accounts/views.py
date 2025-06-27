@@ -4,7 +4,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from .models import GHLUser,Contact
-from .serializers import GHLUserCalendarUpdateSerializer,GHLUserSerializer,ContactSerializer
+from .serializers import GHLUserCalendarUpdateSerializer,GHLUserSerializer,ContactSerializer,AppointmentWithUserSerializer
 from rest_framework.permissions import IsAdminUser, AllowAny
 
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -455,3 +455,15 @@ def delete_single_appointment(request, appointment_id):
         )
 
 
+
+
+
+class NonRecurringAppointmentsView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        appointments = GHLAppointment.objects.filter(recurring_group__isnull=True).order_by('-created_at')
+        paginator = StandardResultsSetPagination()
+        paginated_appointments = paginator.paginate_queryset(appointments, request)
+        serializer = AppointmentWithUserSerializer(paginated_appointments, many=True)
+        return paginator.get_paginated_response(serializer.data)
