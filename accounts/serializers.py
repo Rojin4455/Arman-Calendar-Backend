@@ -239,6 +239,9 @@ class GHLAppointmentSerializer(serializers.ModelSerializer):
         source='recurring_group.title', 
         read_only=True
     )
+    adjusted_start_time = serializers.SerializerMethodField()
+    adjusted_end_time = serializers.SerializerMethodField()
+
     
     class Meta:
         model = GHLAppointment
@@ -246,27 +249,97 @@ class GHLAppointmentSerializer(serializers.ModelSerializer):
             'id', 'ghl_appointment_id', 'contact_id', 'recurring_group',
             'occurrence_number', 'assigned_to', 'calendar_id', 'location_id',
             'title', 'description', 'start_time', 'end_time', 'status',
-            'created_at', 'updated_at', 'is_active', 'recurring_group_title'
+            'created_at', 'updated_at', 'is_active', 'recurring_group_title','adjusted_start_time','adjusted_end_time'
         ]
         read_only_fields = ['id', 'created_at', 'updated_at']
 
 
+    def get_adjusted_start_time(self, obj):
+        if obj.start_time:
+            # Subtract 5 hours.
+            # Ensure the datetime is timezone-aware (obj.start_time should be if USE_TZ=True)
+            # and then convert to the target timezone if necessary, or just subtract.
+            # For displaying, it's often best to convert to a specific timezone.
+
+            # Example 1: Simply subtract 5 hours (result will still be timezone-aware UTC-5 or naive)
+            # This is the most direct translation of "make this time 5 hours before"
+            adjusted_dt = obj.start_time - timedelta(hours=5)
+            # Format as ISO 8601 string, or any other desired format
+            return adjusted_dt.isoformat()
+
+            # Example 2: Convert to a specific timezone (e.g., America/Chicago for CDT)
+            # from pytz import timezone as pytz_timezone
+            # cdt_timezone = pytz_timezone('America/Chicago')
+            # adjusted_dt = obj.start_time.astimezone(cdt_timezone)
+            # return adjusted_dt.isoformat() # Will include offset e.g., '2025-07-11T05:00:00-05:00'
+
+
+        return None
+
+    def get_adjusted_end_time(self, obj):
+        if obj.end_time:
+            # Apply the same logic as for start_time
+            adjusted_dt = obj.end_time - timedelta(hours=5)
+            return adjusted_dt.isoformat()
+        return None
+
 
 class AppointmentWithUserSerializer(serializers.ModelSerializer):
     assigned_user_name = serializers.SerializerMethodField()
+    # Define custom fields for adjusted times
+    adjusted_start_time = serializers.SerializerMethodField()
+    adjusted_end_time = serializers.SerializerMethodField()
+    print("hrerer12222")
 
     class Meta:
         model = GHLAppointment
         fields = [
             'id', 'ghl_appointment_id', 'contact_id', 'assigned_to', 'calendar_id',
-            'location_id', 'title', 'description', 'start_time', 'end_time',
+            'location_id', 'title', 'description',
+            # Include the original times if you still need them, or remove them
+            'start_time', 'end_time',
+            # Add the new adjusted time fields
+            'adjusted_start_time', 'adjusted_end_time',
             'status', 'created_at', 'updated_at', 'is_active',
             'assigned_user_name'
         ]
 
     def get_assigned_user_name(self, obj):
         try:
+            # Note: For production, consider caching GHLUser lookups
+            # if this serializer is used frequently in a list.
             user = GHLUser.objects.get(user_id=obj.assigned_to)
             return user.name
         except GHLUser.DoesNotExist:
-            return "date for service"
+            # The 'date for service' string here seems a bit out of place for a user's name.
+            # Consider if a better default or a null value might be appropriate if no user is found.
+            return "N/A - User Not Found" # Or whatever makes sense contextually
+
+    def get_adjusted_start_time(self, obj):
+        if obj.start_time:
+            # Subtract 5 hours.
+            # Ensure the datetime is timezone-aware (obj.start_time should be if USE_TZ=True)
+            # and then convert to the target timezone if necessary, or just subtract.
+            # For displaying, it's often best to convert to a specific timezone.
+
+            # Example 1: Simply subtract 5 hours (result will still be timezone-aware UTC-5 or naive)
+            # This is the most direct translation of "make this time 5 hours before"
+            adjusted_dt = obj.start_time - timedelta(hours=5)
+            # Format as ISO 8601 string, or any other desired format
+            return adjusted_dt.isoformat()
+
+            # Example 2: Convert to a specific timezone (e.g., America/Chicago for CDT)
+            # from pytz import timezone as pytz_timezone
+            # cdt_timezone = pytz_timezone('America/Chicago')
+            # adjusted_dt = obj.start_time.astimezone(cdt_timezone)
+            # return adjusted_dt.isoformat() # Will include offset e.g., '2025-07-11T05:00:00-05:00'
+
+
+        return None
+
+    def get_adjusted_end_time(self, obj):
+        if obj.end_time:
+            # Apply the same logic as for start_time
+            adjusted_dt = obj.end_time - timedelta(hours=5)
+            return adjusted_dt.isoformat()
+        return None
