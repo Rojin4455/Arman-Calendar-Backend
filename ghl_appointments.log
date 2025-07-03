@@ -372,3 +372,33 @@ Created appointment 438 for user qS7XxuUlhlrcyUUtmdGU, occurrence 3
 Created appointment 439 for user  , occurrence 1
 Created appointment 440 for user  , occurrence 2
 Created appointment 441 for user  , occurrence 3
+Created appointment 698 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The user id not part of calendar team.', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'e6389a13-62ed-49a5-85c3-5fce1b3a2c4c'}
+Payload: {
+  "title": "Client Consultation123",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "1rwE7cUSN5MxPeI1CHiB",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-11T10:00:00+00:00",
+  "endTime": "2025-07-11T10:30:00+00:00",
+  "ignoreFreeSlotValidation": true,
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU"
+}
+Error creating occurrence 1 for user  : GHL error: {'message': 'The user id not part of calendar team.', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': 'e6389a13-62ed-49a5-85c3-5fce1b3a2c4c'}
+Created appointment 699 for user qS7XxuUlhlrcyUUtmdGU, occurrence 1
+GHL API Error: 422 Client Error: Unprocessable Entity for url: https://services.leadconnectorhq.com/calendars/events/appointments | Detail: {'message': 'The user id not part of calendar team.', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '3e736c69-d6e3-4c29-87c2-0887fbf57931'}
+Payload: {
+  "title": "Client Consultation123",
+  "description": "Initial consultation meeting",
+  "appointmentStatus": "confirmed",
+  "calendarId": "1rwE7cUSN5MxPeI1CHiB",
+  "locationId": "b8qvo7VooP3JD3dIZU42",
+  "contactId": "MQVDpkqVwFP9b8cgBUvr",
+  "startTime": "2025-07-11T10:00:00+00:00",
+  "endTime": "2025-07-11T10:30:00+00:00",
+  "ignoreFreeSlotValidation": true,
+  "assignedUserId": "qS7XxuUlhlrcyUUtmdGU"
+}
+Error creating occurrence 1 for user  : GHL error: {'message': 'The user id not part of calendar team.', 'error': 'Unprocessable Entity', 'statusCode': 422, 'traceId': '3e736c69-d6e3-4c29-87c2-0887fbf57931'}

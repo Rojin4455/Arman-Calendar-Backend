@@ -25,6 +25,8 @@ import json
 
 
 
+
+
 def fetch_all_contacts(location_id: str, access_token: str = None) -> List[Dict[str, Any]]:
     """
     Fetch all contacts from GoHighLevel API with proper pagination handling.
@@ -302,7 +304,8 @@ class GHLAppointmentService:
         location_tz = GHLAppointmentService.get_location_timezone(location_id)
         
         if timezone.is_naive(dt):
-            # If naive, assume it's in location timezone
+            # MODIFIED: If naive, assume it's already in the correct local time
+            # Just make it timezone-aware without conversion
             return location_tz.localize(dt)
         else:
             # If aware, convert to location timezone
@@ -451,10 +454,8 @@ class GHLAppointmentService:
     
     @classmethod
     def book_appointments(cls, validated_data):
-        from datetime import timezone
-
+        from datetime import timezone as dt_timezone
         
-
         """Book single or recurring appointments"""
         created_appointments = []
         errors = []
@@ -467,19 +468,15 @@ class GHLAppointmentService:
             # Get contact details
             contact = Contact.objects.get(contact_id=validated_data['contactId'])
             
-            # Convert datetimes to location timezone and then to UTC for GHL API
-            start_dt_local = cls.convert_to_location_timezone(
-                validated_data['startDateTime'], 
-                validated_data['locationId']
-            )
-            end_dt_local = cls.convert_to_location_timezone(
-                validated_data['endDateTime'], 
-                validated_data['locationId']
-            )
+            # MODIFIED: Handle timezone conversion properly
+            start_dt_local = validated_data['startDateTime']  # Already timezone-aware from validation
+            end_dt_local = validated_data['endDateTime']      # Already timezone-aware from validation
             
             # Convert to UTC for GHL API (GHL expects UTC)
             start_dt_utc = start_dt_local.astimezone(pytz.UTC)
             end_dt_utc = end_dt_local.astimezone(pytz.UTC)
+            
+            # ... rest of the method remains the same
             
             recurring_group = None
             if validated_data['type'] == 'recurring':
@@ -513,10 +510,8 @@ class GHLAppointmentService:
 
             print("validated_data['userIds']:    ,", validated_data['userIds'])
             
-            
             # Create appointments for each user and occurrence
             for user_id in validated_data['userIds']+[" "]:
-                # break
                 try:
                     recurring_calendar_id = ""
                     print("user id : ", user_id)
@@ -524,7 +519,6 @@ class GHLAppointmentService:
                     if user_id == " " and validated_data['type'] == "recurring":
                         recurring_calendar_id = "wF51PIbLM1nKPjraUEKv"
                     elif validated_data['type'] == "single" and user_id == " ":
-
                         recurring_calendar_id = "1rwE7cUSN5MxPeI1CHiB"
                     else:
                         user = GHLUser.objects.get(user_id=user_id)
@@ -536,9 +530,9 @@ class GHLAppointmentService:
                     # Create appointments for each occurrence
                     for occurrence_number, (occurrence_start, occurrence_end) in enumerate(occurrences, 1):
                         try:
-                            # Convert to UTC for GHL API
-                            occurrence_start_utc = occurrence_start.astimezone(timezone.utc)
-                            occurrence_end_utc = occurrence_end.astimezone(timezone.utc)
+                            # MODIFIED: These are already in UTC, no need to convert again
+                            occurrence_start_utc = occurrence_start
+                            occurrence_end_utc = occurrence_end
                             
                             # Prepare appointment data for GHL
                             appointment_data = {
@@ -557,25 +551,26 @@ class GHLAppointmentService:
                                 appointment_data["assignedUserId"] = user_id
                             else:
                                 appointment_data["assignedUserId"] = "qS7XxuUlhlrcyUUtmdGU"
+                            
                             # Create appointment in GHL
                             ghl_response = cls.create_ghl_appointment(
                                 appointment_data,
                                 auth_creds.access_token
                             )
                             
-                            # Save to local database
+                            # Save to local database (store in local timezone)
                             local_appointment = GHLAppointment.objects.create(
                                 ghl_appointment_id=ghl_response.get('id'),
                                 recurring_group=recurring_group,
                                 occurrence_number=occurrence_number if recurring_group else None,
                                 contact_id=validated_data['contactId'],
                                 assigned_to=user_id,
-                                calendar_id=user.calendar_id,
+                                calendar_id=user.calendar_id if not recurring_calendar_id else recurring_calendar_id,
                                 location_id=validated_data['locationId'],
                                 title=validated_data.get('title', 'Appointment'),
                                 description=validated_data.get('description', ''),
-                                start_time=occurrence_start,  # Store in local timezone
-                                end_time=occurrence_end       # Store in local timezone
+                                start_time=start_dt_local,  # Store in local timezone
+                                end_time=end_dt_local       # Store in local timezone
                             )
                             
                             created_appointments.append(local_appointment)
@@ -601,6 +596,7 @@ class GHLAppointmentService:
         except Exception as e:
             logger.error(f"Failed to book appointments: {str(e)}")
             raise ValueError(f"Failed to book appointments: {str(e)}")
+
     
     @classmethod
     def update_appointment(cls, appointment_id, validated_data):
@@ -624,21 +620,21 @@ class GHLAppointmentService:
                 appointment.description = validated_data['description']
             
             if 'startDateTime' in validated_data:
-                # Convert to location timezone then to UTC for GHL
-                start_dt_local = cls.convert_to_location_timezone(
-                    validated_data['startDateTime'], 
-                    appointment.location_id
-                )
+                # MODIFIED: Assume incoming datetime is already in correct local time
+                start_dt_local = validated_data['startDateTime']
+                if timezone.is_naive(start_dt_local):
+                    start_dt_local = location_tz.localize(start_dt_local)
+                
                 start_dt_utc = start_dt_local.astimezone(pytz.UTC)
                 update_data['startTime'] = start_dt_utc.isoformat()
                 appointment.start_time = start_dt_local
             
             if 'endDateTime' in validated_data:
-                # Convert to location timezone then to UTC for GHL
-                end_dt_local = cls.convert_to_location_timezone(
-                    validated_data['endDateTime'], 
-                    appointment.location_id
-                )
+                # MODIFIED: Assume incoming datetime is already in correct local time
+                end_dt_local = validated_data['endDateTime']
+                if timezone.is_naive(end_dt_local):
+                    end_dt_local = location_tz.localize(end_dt_local)
+                
                 end_dt_utc = end_dt_local.astimezone(pytz.UTC)
                 update_data['endTime'] = end_dt_utc.isoformat()
                 appointment.end_time = end_dt_local
@@ -661,6 +657,7 @@ class GHLAppointmentService:
         except Exception as e:
             logger.error(f"Failed to update appointment: {str(e)}")
             raise ValueError(f"Failed to update appointment: {str(e)}")
+
     
     @classmethod
     def delete_appointment(cls, appointment_id):

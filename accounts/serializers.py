@@ -116,7 +116,8 @@ class AppointmentBookingSerializer(serializers.Serializer):
         start_dt = attrs['startDateTime']
         end_dt = attrs['endDateTime']
         
-        # If timezone-naive, assume they're in the location timezone
+        # MODIFIED: If timezone-naive, assume they're already in the desired local time
+        # and just make them timezone-aware without conversion
         if timezone.is_naive(start_dt):
             start_dt = location_tz.localize(start_dt)
             attrs['startDateTime'] = start_dt
