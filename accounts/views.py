@@ -246,7 +246,8 @@ class AppointmentDetailView(APIView):
             )
 
 
-
+from django.db.models import Value, CharField
+from django.db.models.functions import Concat
 
 
 class ContactSearchView(generics.ListAPIView):
@@ -257,14 +258,19 @@ class ContactSearchView(generics.ListAPIView):
 
     def get_queryset(self):
         search = self.request.query_params.get('search', '')
-        return Contact.objects.filter(
+        queryset = Contact.objects.annotate(
+            full_name=Concat(
+                'first_name', Value(' '), 'last_name',
+                output_field=CharField()
+            )
+        ).filter(
             Q(contact_id__icontains=search) |
             Q(first_name__icontains=search) |
             Q(last_name__icontains=search) |
             Q(email__icontains=search) |
-            Q(phone__icontains=search)
+            Q(phone__icontains=search) |
+            Q(full_name__icontains=search)  # <-- this enables "john simmons"
         )
-
 
 class GHLUserSearchView(generics.ListAPIView):
     serializer_class = GHLUserSerializer
