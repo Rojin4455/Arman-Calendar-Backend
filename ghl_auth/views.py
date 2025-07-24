@@ -125,12 +125,13 @@ class GhlWebhookView(View):
             event_type = webhook_data.get("type")
             token = GHLAuthCredentials.objects.get(location_id = webhook_data.get("locationId"))
 
-
-
+            print("event: ", event_type,webhook_data)
+            print("reached 1")
             if event_type == "UserCreate":
                 self.handle_user_create(webhook_data, token)
 
             if event_type in ["ContactCreate", "ContactUpdate"]:
+                print("inside contact create or update: ")
                 create_or_update_contact(webhook_data)
             elif event_type == "ContactDelete":
                 delete_contact(webhook_data)

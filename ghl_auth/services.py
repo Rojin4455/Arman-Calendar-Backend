@@ -36,6 +36,7 @@ def create_or_update_contact(data):
             "location_id": data.get("locationId"),
         }
     )
+    print("contact: ", contact, created)
     print("Contact created/updated:", contact_id)
 
 def delete_contact(data):
