@@ -258,7 +258,7 @@ class ContactSearchView(generics.ListAPIView):
 
     def get_queryset(self):
         search = self.request.query_params.get('search', '')
-        queryset = Contact.objects.annotate(
+        return Contact.objects.annotate(
             full_name=Concat(
                 'first_name', Value(' '), 'last_name',
                 output_field=CharField()
