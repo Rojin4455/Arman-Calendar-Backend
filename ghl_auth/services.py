@@ -22,10 +22,15 @@ from ghl_auth.models import GHLAuthCredentials
 from accounts.models import Contact
 
 def create_or_update_contact(data):
-    contact_id = data.get("id")
-    contact, created = Contact.objects.update_or_create(
-        contact_id=contact_id,
-        defaults={
+    try:
+        contact_id = data.get("id")
+        if not contact_id:
+            print("❌ No contact ID provided in data:", data)
+            return
+
+        print("➡️ Attempting to create or update contact with ID:", contact_id)
+
+        defaults = {
             "first_name": data.get("firstName"),
             "last_name": data.get("lastName"),
             "email": data.get("email"),
@@ -35,9 +40,22 @@ def create_or_update_contact(data):
             "date_added": data.get("dateAdded"),
             "location_id": data.get("locationId"),
         }
-    )
-    print("contact: ", contact, created)
-    print("Contact created/updated:", contact_id)
+
+        print("📝 Defaults to be used:", defaults)
+
+        contact, created = Contact.objects.update_or_create(
+            contact_id=contact_id,
+            defaults=defaults
+        )
+
+        action = "created" if created else "updated"
+        print(f"✅ Contact {action}: {contact} (ID: {contact_id})")
+
+    except Exception as e:
+        print("❗ Error creating or updating contact:", str(e))
+        import traceback
+        traceback.print_exc()
+
 
 def delete_contact(data):
     contact_id = data.get("id")
