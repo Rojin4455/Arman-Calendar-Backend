@@ -35,7 +35,7 @@ def create_or_update_contact(data):
             "last_name": data.get("lastName"),
             "email": data.get("email"),
             "phone": data.get("phone"),
-            "dnd": data.get("dnd", False),
+            "dnd": data.get("dnd") or False,
             "country": data.get("country"),
             "date_added": data.get("dateAdded"),
             "location_id": data.get("locationId"),
